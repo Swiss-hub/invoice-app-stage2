@@ -41,18 +41,18 @@ export function useKeyboardShortcuts() {
           break;
         }
         case "Escape": {
-          const search = document.getElementById(
-            "invoice-search"
-          ) as HTMLInputElement | null;
-          if (document.activeElement === search) {
-            search.blur();
-            search.value = "";
-            search.dispatchEvent(new Event("input", { bubbles: true }));
-            return;
-          }
-          if (isTyping()) return;
-          navigate(-1);
-          break;
+            const search = document.getElementById(
+                "invoice-search"
+            ) as HTMLInputElement | null;
+            if (search && document.activeElement === search) {
+                search.blur();
+                search.value = "";
+                search.dispatchEvent(new Event("input", { bubbles: true }));
+                return;
+            }
+            if (isTyping()) return;
+                navigate(-1);
+                break;
         }
         case "?": {
           if (isTyping()) return;

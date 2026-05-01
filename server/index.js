@@ -3,10 +3,26 @@ import cors from "cors";
 import { randomUUID } from "crypto";
 import { z } from "zod";
 import db from "./db.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
+
+// API key protection (only enforced when API_KEY env var is set)
+app.use("/api", (req, res, next) => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) return next(); // no key set → dev mode, allow all
+
+  const provided = req.headers["x-api-key"];
+  if (!provided || provided !== apiKey) {
+    return res.status(401).json({ error: "Unauthorized: invalid or missing API key" });
+  }
+  next();
+});
 
 const itemSchema = z.object({
   description: z.string().min(1),
@@ -344,7 +360,16 @@ app.delete("/api/invoices/:id", (req, res) => {
   res.status(204).send();
 });
 
+// Serve React build in production
+if (process.env.NODE_ENV === "production") {
+  const clientDist = path.join(__dirname, "../client/dist");
+  app.use(express.static(clientDist));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(clientDist, "index.html"));
+  });
+}
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`API running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

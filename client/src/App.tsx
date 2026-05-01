@@ -8,11 +8,9 @@ import ClientsPage from "./pages/ClientsPage";
 import { useTheme } from "./lib/useTheme";
 import { useKeyboardShortcuts } from "./lib/useKeyboardShortcuts";
 import ShortcutsModal from "./components/ShortcutsModal";
-import { useRef } from "react";
 
 function Shell() {
   const [theme, toggleTheme] = useTheme();
-  const modalRef = useRef<HTMLDialogElement>(null);
   useKeyboardShortcuts();
 
   return (

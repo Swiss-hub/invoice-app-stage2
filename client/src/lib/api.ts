@@ -2,6 +2,13 @@ import type { Invoice, InvoiceInput, Stats } from "../types/invoice";
 import type { Client, ClientInput, ClientStats } from "../types/client";
 
 const BASE = "/api";
+const API_KEY = import.meta.env.VITE_API_KEY as string | undefined;
+
+function headers(extra: Record<string, string> = {}): Record<string, string> {
+  const h: Record<string, string> = { ...extra };
+  if (API_KEY) h["x-api-key"] = API_KEY;
+  return h;
+}
 
 async function handle<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -13,67 +20,70 @@ async function handle<T>(res: Response): Promise<T> {
 }
 
 export const api = {
-    listClients: () =>
-        fetch(`${BASE}/clients`).then(handle<Client[]>),
+  listInvoices: () =>
+    fetch(`${BASE}/invoices`, { headers: headers() }).then(handle<Invoice[]>),
 
-    createClient: (data: ClientInput ) =>
-        fetch(`${BASE}/clients`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json"},
-            body: JSON.stringify(data),
-        }).then(handle<Client>),
+  getInvoice: (id: string) =>
+    fetch(`${BASE}/invoices/${id}`, { headers: headers() }).then(handle<Invoice>),
 
-    updateClient: (id: string, data: ClientInput) =>
-        fetch(`${BASE}/clients/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        }).then(handle<Client>),
+  getNextNumber: () =>
+    fetch(`${BASE}/invoices/next-number`, { headers: headers() })
+      .then(handle<{ next: string }>)
+      .then((r) => r.next),
 
-    deleteClient: (id: string) =>
-        fetch(`${BASE}/clients/${id}`, {
-            method: "DELETE",
-        }).then(handle<void>),
+  createInvoice: (data: InvoiceInput) =>
+    fetch(`${BASE}/invoices`, {
+      method: "POST",
+      headers: headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    }).then(handle<Invoice>),
 
-    listClientsWithStats: () =>
-        fetch(`${BASE}/clients/stats`).then(handle<ClientStats[]>),
+  updateInvoice: (id: string, data: InvoiceInput) =>
+    fetch(`${BASE}/invoices/${id}`, {
+      method: "PUT",
+      headers: headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    }).then(handle<Invoice>),
 
-    listInvoices: () =>
-        fetch(`${BASE}/invoices`).then(handle<Invoice[]>),
-    
-    getInvoice: (id: string) =>
-        fetch(`${BASE}/invoices/${id}`).then(handle<Invoice>),
+  updateStatus: (id: string, status: string) =>
+    fetch(`${BASE}/invoices/${id}/status`, {
+      method: "PATCH",
+      headers: headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ status }),
+    }).then(handle<Invoice>),
 
-    createInvoice: (data: InvoiceInput) =>
-        fetch(`${BASE}/invoices`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        }).then(handle<Invoice>),
+  deleteInvoice: (id: string) =>
+    fetch(`${BASE}/invoices/${id}`, {
+      method: "DELETE",
+      headers: headers(),
+    }).then(handle<void>),
 
-    updateInvoice: (id: string, data: InvoiceInput) =>
-        fetch(`${BASE}/invoices/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        }).then(handle<Invoice>),
+  getStats: () =>
+    fetch(`${BASE}/stats`, { headers: headers() }).then(handle<Stats>),
 
-    updateStatus: (id: string, status: string) =>
-        fetch(`${BASE}/invoices/${id}/status`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status }),
-        }).then(handle<Invoice>),
+  listClients: () =>
+    fetch(`${BASE}/clients`, { headers: headers() }).then(handle<Client[]>),
 
-    deleteInvoice: (id: string) =>
-        fetch(`${BASE}/invoices/${id}`, {
-            method: "DELETE",
-        }).then(handle<void>),
+  listClientsWithStats: () =>
+    fetch(`${BASE}/clients/stats`, { headers: headers() }).then(handle<ClientStats[]>),
 
-    getNextNumber: () =>
-        fetch(`${BASE}/invoices/next-number`)
-            .then(handle<{ next: string }>)
-            .then((r) => r.next),
+  createClient: (data: ClientInput) =>
+    fetch(`${BASE}/clients`, {
+      method: "POST",
+      headers: headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    }).then(handle<Client>),
 
-    getStats: () => fetch(`${BASE}/stats`).then(handle<Stats>),
+  updateClient: (id: string, data: ClientInput) =>
+    fetch(`${BASE}/clients/${id}`, {
+      method: "PUT",
+      headers: headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    }).then(handle<Client>),
+
+  deleteClient: (id: string) =>
+    fetch(`${BASE}/clients/${id}`, {
+      method: "DELETE",
+      headers: headers(),
+    }).then(handle<void>),
 };
