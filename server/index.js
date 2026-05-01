@@ -6,6 +6,12 @@ import db from "./db.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
+function log(type, entityId, entityLabel, description) {
+  db.prepare(
+    "INSERT INTO activity_log (id, type, entity_id, entity_label, description) VALUES (?, ?, ?, ?, ?)"
+  ).run(randomUUID(), type, entityId ?? null, entityLabel ?? null, description);
+}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
@@ -159,6 +165,7 @@ app.post("/api/clients", (req, res) => {
   res.status(201).json(
     db.prepare("SELECT * FROM clients WHERE id = ?").get(id)
   );
+  log("client_created", id, name.trim(), `Client "${name.trim()}" added`);
 });
 
 // Update client
@@ -175,15 +182,26 @@ app.put("/api/clients/:id", (req, res) => {
   if (result.changes === 0)
     return res.status(404).json({ error: "Client not found" });
   res.json(db.prepare("SELECT * FROM clients WHERE id = ?").get(req.params.id));
+  log("client_updated", req.params.id, name.trim(), `Client "${name.trim()}" updated`);
 });
 
 // Delete client
 app.delete("/api/clients/:id", (req, res) => {
+  const clientToDelete = db
+    .prepare("SELECT name FROM clients WHERE id = ?")
+    .get(req.params.id);
   const result = db
     .prepare("DELETE FROM clients WHERE id = ?")
     .run(req.params.id);
   if (result.changes === 0)
     return res.status(404).json({ error: "Client not found" });
+  if (clientToDelete) 
+    log("client_deleted", 
+        req.params.id, 
+        clientToDelete.name, 
+        `Client "${clientToDelete.name}" 
+        deleted`
+      );
   res.status(204).send();
 });
 
@@ -224,6 +242,15 @@ app.get("/api/invoices/:id", (req, res) => {
   res.json(invoice);
 });
 
+// Activity log
+app.get("/api/activity", (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit ?? "50"), 200);
+  const rows = db
+    .prepare("SELECT * FROM activity_log ORDER BY created_at DESC LIMIT ?")
+    .all(limit);
+  res.json(rows);
+});
+
 // Create invoice
 app.post("/api/invoices", (req, res) => {
   const parsed = invoiceSchema.safeParse(req.body);
@@ -254,6 +281,10 @@ app.post("/api/invoices", (req, res) => {
       status: data.status,
       notes: data.notes ?? null,
     });
+
+    tx();
+    log("invoice_created", id, data.invoice_number, `Invoice #${data.invoice_number} created for ${data.client_name}`);
+
     for (const item of data.items) {
       insertItem.run(
         randomUUID(),
@@ -316,6 +347,10 @@ app.put("/api/invoices/:id", (req, res) => {
       status: data.status,
       notes: data.notes ?? null,
     });
+
+    tx();
+    log("invoice_updated", id, data.invoice_number, `Invoice #${data.invoice_number} updated`);
+
     deleteItems.run(id);
     for (const item of data.items) {
       insertItem.run(
@@ -341,17 +376,39 @@ app.patch("/api/invoices/:id/status", (req, res) => {
   }
   const result = db
     .prepare(
-      "UPDATE invoices SET status = ?, updated_at = datetime('now') WHERE id = ?"
-    )
+      "UPDATE invoices SET status = ?, updated_at = datetime('now') WHERE id = ?")
     .run(status, req.params.id);
-  if (result.changes === 0) {
+  if (result.changes === 0) 
     return res.status(404).json({ error: "Invoice not found" });
-  }
-  res.json(getInvoiceWithItems(req.params.id));
+  const updated = getInvoiceWithItems(req.params.id);
+    log(
+      "status_changed", 
+      req.params.id, 
+      updated.invoice_number, 
+      `Invoice #${updated.invoice_number} 
+      marked as ${status}`);
+  res.json(updated);
 });
 
 // Delete invoice
 app.delete("/api/invoices/:id", (req, res) => {
+  // Fetch label before deleting
+  const toDelete = db
+    .prepare(
+      "SELECT invoice_number FROM invoices WHERE id = ?").get(req.params.id);
+  const result = db
+    .prepare(
+      "DELETE FROM invoices WHERE id = ?").run(req.params.id);
+  if (result.changes === 0) 
+    return res.status(404).json({ error: "Invoice not found" });
+  if (toDelete) 
+    log(
+      "invoice_deleted", 
+      req.params.id, 
+      toDelete.invoice_number, 
+      `Invoice #${toDelete.invoice_number} deleted`);
+  res.status(204).send();
+  
   const result = db
     .prepare("DELETE FROM invoices WHERE id = ?")
     .run(req.params.id);

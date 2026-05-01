@@ -1174,3 +1174,150 @@ a:hover { color: var(--color-primary); }
 @media (max-width: 640px) {
   .shortcuts-dialog { min-width: min(320px, 90vw); }
 }
+
+/* ── Onboarding ─────────────────────────────── */
+.onboarding-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 24px;
+}
+.onboarding-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px 32px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+.onboarding-skip {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.onboarding-skip:hover { color: var(--color-text); }
+.onboarding-emoji {
+  font-size: 48px;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+.onboarding-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--color-text);
+}
+.onboarding-body {
+  font-size: 14px;
+  color: var(--color-text-subtle);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.onboarding-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.onboarding-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.onboarding-dot.active {
+  background: var(--color-primary);
+  transform: scale(1.3);
+}
+.onboarding-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.onboarding-actions .btn {
+  flex: 1;
+  max-width: 200px;
+}
+
+@media (max-width: 480px) {
+  .onboarding-card { padding: 32px 24px 24px; }
+  .onboarding-actions { flex-direction: column; }
+  .onboarding-actions .btn { max-width: 100%; }
+}
+
+/* ── Activity log ───────────────────────────── */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.activity-icon.invoice_created  { background: rgba(124,93,250,0.1); }
+.activity-icon.invoice_updated  { background: rgba(124,93,250,0.07); }
+.activity-icon.status_changed   { background: rgba(51,214,159,0.1); }
+.activity-icon.invoice_deleted  { background: rgba(236,87,87,0.1); }
+.activity-icon.client_created   { background: rgba(255,143,0,0.1); }
+.activity-icon.client_updated   { background: rgba(255,143,0,0.07); }
+.activity-icon.client_deleted   { background: rgba(236,87,87,0.07); }
+.activity-content { flex: 1; min-width: 0; }
+.activity-description {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 3px;
+}
+.activity-time {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.activity-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--color-border);
+  color: var(--color-text-subtle);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.activity-empty {
+  text-align: center;
+  padding: 48px;
+  color: var(--color-text-subtle);
+}

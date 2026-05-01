@@ -37,6 +37,15 @@ db.exec(`
     address TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
+    CREATE TABLE IF NOT EXISTS activity_log (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL,
+    entity_id TEXT,
+    entity_label TEXT,
+    description TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 
 export default db;

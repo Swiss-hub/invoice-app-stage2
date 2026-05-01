@@ -1,4 +1,4 @@
-import type { Invoice, InvoiceInput, Stats } from "../types/invoice";
+import type { Invoice, InvoiceInput, Stats, ActivityEntry } from "../types/invoice";
 import type { Client, ClientInput, ClientStats } from "../types/client";
 
 const BASE = "/api";
@@ -60,6 +60,10 @@ export const api = {
 
   getStats: () =>
     fetch(`${BASE}/stats`, { headers: headers() }).then(handle<Stats>),
+
+  getActivity: (limit = 50) =>
+    fetch(`${BASE}/activity?limit=${limit}`, { headers: headers() })
+        .then(handle<ActivityEntry[]>),
 
   listClients: () =>
     fetch(`${BASE}/clients`, { headers: headers() }).then(handle<Client[]>),

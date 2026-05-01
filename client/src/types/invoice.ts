@@ -55,3 +55,12 @@ export interface Stats {
     total: number;
   }>;
 }
+
+export interface ActivityEntry {
+  id: string;
+  type: string;
+  entity_id: string | null;
+  entity_label: string | null;
+  description: string;
+  created_at: string;
+}

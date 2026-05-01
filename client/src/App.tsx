@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import ActivityPage from "./pages/ActivityPage";
 import DashboardPage from "./pages/DashboardPage";
 import InvoiceListPage from "./pages/InvoiceListPage";
 import InvoiceDetailPage from "./pages/InvoiceDetailPage";
@@ -8,9 +9,12 @@ import ClientsPage from "./pages/ClientsPage";
 import { useTheme } from "./lib/useTheme";
 import { useKeyboardShortcuts } from "./lib/useKeyboardShortcuts";
 import ShortcutsModal from "./components/ShortcutsModal";
+import OnboardingModal, { useOnboarding } from "./components/OnboardingModal";
 
 function Shell() {
   const [theme, toggleTheme] = useTheme();
+  const { show: showOnboarding, complete: completeOnboarding } =
+    useOnboarding();
   useKeyboardShortcuts();
 
   return (
@@ -38,6 +42,12 @@ function Shell() {
             className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
           >
             👤<span>Clients</span>
+          </NavLink>
+          <NavLink
+            to="/activity"
+            className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
+          >
+            📋<span>Activity</span>
           </NavLink>
         </nav>
         <div
@@ -76,6 +86,7 @@ function Shell() {
       <main className="main">
         <Routes>
           <Route path="/" element={<DashboardPage />} />
+          <Route path="/activity" element={<ActivityPage />} />
           <Route path="/invoices" element={<InvoiceListPage />} />
           <Route path="/invoices/new" element={<InvoiceFormPage />} />
           <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
@@ -83,6 +94,7 @@ function Shell() {
         </Routes>
       </main>
       <ShortcutsModal />
+      {showOnboarding && <OnboardingModal onClose={completeOnboarding} />}
     </div>
   );
 }
