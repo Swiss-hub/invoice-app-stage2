@@ -4,16 +4,16 @@
 
 ## Features
 
-- **Dashboard** — revenue summary, invoice counts by status, overdue alerts with deep links
-- **Invoice list** — search by number or client, filter by status, due-date urgency highlighting
-- **Create & edit invoices** — line-item form with running totals, auto-generated invoice numbers, saved client picker
-- **Invoice detail** — full breakdown with one-click status actions (Mark as Paid, Sent, Overdue)
-- **PDF export** — browser-native print-to-PDF with a clean print layout
-- **Client management** — save client details, view per-client paid/outstanding totals
-- **Dark mode** — OS preference detection with manual toggle, persisted to localStorage
-- **Keyboard shortcuts** — `N` new invoice, `/` search, `Esc` back/clear, `?` shortcut help
-- **API key protection** — all `/api/*` routes require a secret key in production
-- **Responsive** — desktop sidebar, mobile bottom navigation, single-column layouts on small screens
+- **Dashboard** = revenue summary, invoice counts by status, overdue alerts with deep links
+- **Invoice list** = search by number or client, filter by status, due-date urgency highlighting
+- **Create & edit invoices** = line-item form with running totals, auto-generated invoice numbers, saved client picker
+- **Invoice detail** = full breakdown with one-click status actions (Mark as Paid, Sent, Overdue)
+- **PDF export** = browser-native print-to-PDF with a clean print layout
+- **Client management** = save client details, view per-client paid/outstanding totals
+- **Dark mode** = OS preference detection with manual toggle, persisted to localStorage
+- **Keyboard shortcuts** = `N` new invoice, `/` search, `Esc` back/clear, `?` shortcut help
+- **API key protection** = all `/api/*` routes require a secret key in production
+- **Responsive** = desktop sidebar, mobile bottom navigation, single-column layouts on small screens
 
 ---
 
