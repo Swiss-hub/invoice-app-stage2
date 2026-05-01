@@ -4,13 +4,13 @@ A full-stack invoice management application built with React, TypeScript, Expres
 
 ## Features
 
-- **Dashboard** — at-a-glance revenue summary, invoice counts by status, and overdue alerts
-- **Invoice list** — search by invoice number or client name, filter by status (draft / sent / paid / overdue)
-- **Create & edit invoices** — line-item form with running totals, client details, and date pickers
-- **Status management** — one-click "Mark as Paid", "Mark as Sent", and "Mark as Overdue" actions
-- **PDF export** — browser-native print-to-PDF with a clean, print-optimised layout
-- **Auto-numbered invoices** — sequential invoice numbers (INV-001, INV-002…) generated automatically
-- **Persistent storage** — SQLite database via better-sqlite3; no external database required
+- **Dashboard** = at-a-glance revenue summary, invoice counts by status, and overdue alerts
+- **Invoice list** = search by invoice number or client name, filter by status (draft / sent / paid / overdue)
+- **Create & edit invoices** = line-item form with running totals, client details, and date pickers
+- **Status management** = one-click "Mark as Paid", "Mark as Sent", and "Mark as Overdue" actions
+- **PDF export** = browser-native print-to-PDF with a clean, print-optimised layout
+- **Auto-numbered invoices** = sequential invoice numbers (INV-001, INV-002…) generated automatically
+- **Persistent storage** = SQLite database via better-sqlite3; no external database required
 
 ## Tech Stack
 
