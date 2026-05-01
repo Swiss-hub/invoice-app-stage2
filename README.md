@@ -4,18 +4,13 @@
 
 ## Features
 
-- **Dashboard** — revenue summary, invoice counts by status, overdue alerts with deep links
-- **Invoice list** — search by number or client, filter by status, due-date urgency highlighting
-- **Create & edit invoices** — line-item form with running totals, auto-generated invoice numbers, saved client picker
-- **Invoice detail** — full breakdown with one-click status actions (Mark as Paid, Sent, Overdue)
-- **PDF export** — browser-native print-to-PDF with a clean print layout
-- **Client management** — save client details, view per-client paid/outstanding totals
-- **Dark mode** — OS preference detection with manual toggle, persisted to localStorage
-- **Keyboard shortcuts** — `N` new invoice, `/` search, `Esc` back/clear, `?` shortcut help
-- **API key protection** — all `/api/*` routes require a secret key in production
-- **Responsive** — desktop sidebar, mobile bottom navigation, single-column layouts on small screens
-
----
+- **Dashboard** = at-a-glance revenue summary, invoice counts by status, and overdue alerts
+- **Invoice list** = search by invoice number or client name, filter by status (draft / sent / paid / overdue)
+- **Create & edit invoices** = line-item form with running totals, client details, and date pickers
+- **Status management** = one-click "Mark as Paid", "Mark as Sent", and "Mark as Overdue" actions
+- **PDF export** = browser-native print-to-PDF with a clean, print-optimised layout
+- **Auto-numbered invoices** = sequential invoice numbers (INV-001, INV-002…) generated automatically
+- **Persistent storage** = SQLite database via better-sqlite3; no external database required
 
 ## Tech Stack
 
