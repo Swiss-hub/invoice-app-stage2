@@ -391,29 +391,22 @@ app.patch("/api/invoices/:id/status", (req, res) => {
 });
 
 // Delete invoice
-app.delete("/api/invoices/:id", (req, res) => {
-  // Fetch label before deleting
-  const toDelete = db
-    .prepare(
-      "SELECT invoice_number FROM invoices WHERE id = ?").get(req.params.id);
-  const result = db
-    .prepare(
-      "DELETE FROM invoices WHERE id = ?").run(req.params.id);
-  if (result.changes === 0) 
-    return res.status(404).json({ error: "Invoice not found" });
-  if (toDelete) 
-    log(
-      "invoice_deleted", 
-      req.params.id, 
-      toDelete.invoice_number, 
-      `Invoice #${toDelete.invoice_number} deleted`);
-  res.status(204).send();
-  
-  const result = db
-    .prepare("DELETE FROM invoices WHERE id = ?")
+app.delete("/api/clients/:id", (req, res) => {
+  const clientToDelete = db
+    .prepare("SELECT name FROM clients WHERE id = ?")
+    .get(req.params.id);
+  const deleteResult = db
+    .prepare("DELETE FROM clients WHERE id = ?")
     .run(req.params.id);
-  if (result.changes === 0)
-    return res.status(404).json({ error: "Invoice not found" });
+  if (deleteResult.changes === 0)
+    return res.status(404).json({ error: "Client not found" });
+  if (clientToDelete)
+    log(
+      "client_deleted",
+      req.params.id,
+      clientToDelete.name,
+      `Client "${clientToDelete.name}" deleted`
+    );
   res.status(204).send();
 });
 
