@@ -105,6 +105,3 @@ export default function OnboardingModal({ onClose }: Props) {
     </div>
   );
 }
-
-// Run in your browser console to reset
-localStorage.removeItem("invoice_app_onboarded");
